@@ -1,0 +1,2 @@
+'use strict';
+const I18n={locale:'he',strings:{},async load(locale='he'){if(!['he','en'].includes(locale))throw Error('Unsupported locale');const response=await fetch('locales/'+locale+'.json');this.strings=await response.json();this.locale=locale;document.documentElement.lang=locale;document.documentElement.dir=locale==='he'?'rtl':'ltr';},t(key,params={}){let value=I18n.strings[key]??I18n.strings['error.generic']??key;for(const [k,v] of Object.entries(params))value=value.replaceAll('{'+k+'}',String(v));return value;}};

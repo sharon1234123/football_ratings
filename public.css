@@ -1,0 +1,5 @@
+/* Public-only presentation. Local editing UI is unchanged. */
+[data-edit],[data-quick-edit],[data-save],[data-save-card],[data-propose-player],[data-review-player],[data-er-save],[data-bulk-apply],[data-reset-lineup],[data-pick],[data-remove-skill],[data-gk-promote],#gk-save,#gk-cancel,.ui-admin,.gk-info,[data-gk-scope="drafts"]{display:none!important}
+.pitch-player[data-slot]{cursor:default}
+.aside-bottom{color:var(--muted)}
+#gk-drafts,[data-skill-remove],.skill-admin-actions{display:none!important}
