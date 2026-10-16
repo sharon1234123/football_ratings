@@ -138,3 +138,9 @@ body{background:var(--bg)}#sidebar{background:#191c1f}#sidebar nav a.active{back
 
 @media(max-width:650px){.player-directory tbody tr,.compact-ranking tbody tr{grid-template-rows:32px 18px}.player-row-name{min-width:0;white-space:normal;overflow-wrap:anywhere;line-height:15px;text-align:start}.compact-ranking.ability-ranking .player-row-name{font-size:12px}.player-directory td:nth-child(1),.compact-ranking .ability-player-name{align-self:center}}
 @media(max-width:650px){.player-directory .ui-affiliation small a{font-size:0}.player-directory .ui-affiliation>a{min-width:0;overflow:hidden;text-overflow:ellipsis}}
+/* Keep the full portrait visible in small mobile frames. */
+@media(max-width:650px){
+ .player-portrait{flex-shrink:0;aspect-ratio:1;border-radius:8px}
+ .player-portrait img{display:block;width:100%!important;height:100%!important;min-width:0!important;max-width:100%;max-height:100%;flex-shrink:0;object-fit:contain!important;object-position:center}
+}
+
