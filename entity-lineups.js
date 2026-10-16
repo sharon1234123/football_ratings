@@ -10,7 +10,7 @@ async function entityFormation(kind,name,q){
  entityPanels.set(panelKey,pref);
  const oldTitle=page.querySelector('.title'),summary=page.querySelector('.entity-summary');
  const rosterCounts=Object.fromEntries(Object.entries({GK:['GK'],DEF:['RB','LB','RCB','LCB'],MID:['DM','CM','AM'],ATT:['RW','LW','CF']}).map(([key,positions])=>[key,d.players.filter(p=>positions.includes(p.position)).length]));
- const rosterSummary=`<div class="roster-composition" aria-label="מבנה הסגל"><span>סגל ${d.count}</span>${Object.entries(rosterCounts).map(([k,n])=>`<span dir="ltr">${k} ${n}</span>`).join('')}</div>`;
+ const rosterSummary=`<div class="roster-composition" aria-label="מבנה הסגל"><span>סגל ${d.count}</span>${Object.entries(rosterCounts).map(([k,n])=>`<span><small>${({GK:"שוערים",DEF:"הגנה",MID:"קישור",ATT:"התקפה"})[k]}</small><b>${n}</b></span>`).join('')}</div>`;
  const summaryHTML=`<b>${d.count} שחקנים רשמיים</b><span>ממוצע Overall <strong>${entityNumber(d.average)}</strong></span>${averageNote(d.count)}`;oldTitle.remove();summary.remove();
  const squad=document.createElement('section');squad.className='entity-squad'+(q.metric==='overall'?' entity-squad-overall':'');squad.id='entity-squad';squad.setAttribute('role','tabpanel');
  while(page.firstChild)squad.append(page.firstChild);
