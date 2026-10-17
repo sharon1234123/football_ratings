@@ -1,6 +1,9 @@
 'use strict';
 // Presentation only: these components never fetch, save or calculate ratings.
+const POSITION_ORDER=['CF','RW','LW','AM','CM','DM','RB','LB','RCB','LCB','GK'];
 const UI={
+ ShortDate(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(+d)?'—':d.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'2-digit'}).replaceAll('/','.');},
+ MainTier(v){return Number(v)>=95?'main-gold':Number(v)>=90?'main-champagne':Number(v)>=85?'main-light':'main-muted';},
  Number(value){if(value==null||value==='')return '—';const n=Number(value);return Number.isFinite(n)?String(Math.round(n)):String(value)},
  Navigation(nav){const link=([route,key])=>`<a href="#${route}">${this.Icon(route)}<span>${t(key)}</span></a>`;return nav.slice(0,5).map(link).join('')+`<details class="mobile-more"><summary aria-label="עוד מסכים">☰ <span>עוד</span></summary><div>${nav.slice(5).map(link).join('')}</div></details><div class="desktop-secondary-nav">${nav.slice(5).map(link).join('')}</div>`},
  icons:{dashboard:'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z',players:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M20 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',gk:'M12 3 3 7v6c0 5 9 9 9 9s9-4 9-9V7zM8 12l3 3 5-6',clubs:'M4 21V8l8-5 8 5v13M2 21h20M9 21v-5h6v5M8 9h1M15 9h1M8 12h1M15 12h1',countries:'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18',abilities:'M4 20V10M10 20V4M16 20v-7M22 20H2',analytics:'M3 3v18h18M6 15l5-5 4 3 6-8',drafts:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 12h8M8 16h6',formula:'M4 5h16M4 12h16M4 19h16M8 3v4M16 10v4M10 17v4',search:'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0'},
@@ -29,6 +32,7 @@ const UI={
  FrequencyRow(label,count,percent,max,rank=null){return `<div class="ui-frequency"><div>${rank==null?'':`<i class="ui-frequency-rank">#${rank}</i>`}${label}<span><b>${count}</b>${percent==null?'':` <small>${Number(percent).toFixed(1)}%</small>`}</span></div><progress value="${count}" max="${Math.max(1,max)}" aria-label="${esc(t('analytics.count'))}"></progress></div>`},
  FilterSummary(box){const count=[...box.querySelectorAll('input:not([type=checkbox]),select')].filter(el=>{const key=el.dataset.erFilter||el.dataset.draftFilter||el.id;return !['size','limit','sort','gk-sort','gk-order'].includes(key)&&!!el.value&&el.value!=='overall'}).length;const summary=box.querySelector('summary');if(summary)summary.textContent='סינון וחיפוש'+(count?' · '+count+' פילטרים פעילים':'')},
  enhance(root=app){
+  root.querySelectorAll('select').forEach(el=>{const selected=el.value,opts=[...el.options];if(opts.some(o=>POSITION_ORDER.includes(o.value))&&opts.every(o=>!o.value||POSITION_ORDER.includes(o.value))){opts.sort((a,b)=>(a.value?POSITION_ORDER.indexOf(a.value):-1)-(b.value?POSITION_ORDER.indexOf(b.value):-1)).forEach(o=>el.append(o));el.value=selected;}});
   root.querySelectorAll('.filters').forEach(el=>{if(el.closest('.ui-filterbar')||el.tagName==='FORM'||el.closest('#edit-form,#phase5-form'))return;const box=document.createElement('details');box.className='ui-filterbar';box.open=!matchMedia('(max-width:650px)').matches;const summary=document.createElement('summary');summary.textContent='סינון וחיפוש';el.before(box);box.append(summary,el)});
   root.querySelectorAll('.ui-filterbar').forEach(box=>this.FilterSummary(box));
  },
@@ -44,3 +48,28 @@ if(typeof document!=="undefined")document.addEventListener("error",e=>{if(e.targ
 document.addEventListener('input',e=>{const box=e.target.closest('.ui-filterbar');if(box)UI.FilterSummary(box)});
 document.addEventListener('change',e=>{const box=e.target.closest('.ui-filterbar');if(box)UI.FilterSummary(box)});
 document.addEventListener('click',e=>{if(e.target.closest('.mobile-more a'))e.target.closest('.mobile-more').open=false});
+
+// Direct page navigation reuses each list's existing paging handler.
+function pageJumpHTML(page,pages,action=''){
+ pages=Math.max(1,Number(pages)||1);
+ return `<span class="page-jump"><span>עמוד ${page} / ${pages}</span><input data-page-number type="text" inputmode="numeric" pattern="[0-9]*" value="${page}" aria-label="מספר עמוד" data-page-max="${pages}"><button type="button" data-page-go data-page-action="${action}">עבור</button></span>`;
+}
+function validJumpPage(raw,max){
+ if(!/^\d+$/.test(raw.trim()))return null;
+ const n=Number(raw);return Number.isSafeInteger(n)?Math.max(1,Math.min(n,max)):null;
+}
+function bindPageJump(host,callback){
+ host.querySelector('[data-page-go]').onclick=e=>callback(Number(e.currentTarget.dataset.jumpValue));
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-page-go]');if(!b)return;
+ const input=b.closest('.page-jump').querySelector('[data-page-number]');
+ const page=validJumpPage(input.value,Number(input.dataset.pageMax));
+ if(page===null){input.setAttribute('aria-invalid','true');e.preventDefault();e.stopImmediatePropagation();return;}
+ input.removeAttribute('aria-invalid');input.value=page;b.dataset.jumpValue=page;
+ if(b.dataset.pageAction)b.setAttribute(b.dataset.pageAction,page);
+},true);
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-page-number]')){e.preventDefault();e.target.closest('.page-jump').querySelector('[data-page-go]').click();}});
+
+// Keep existing filter controls accessible when changing screen orientation.
+matchMedia("(min-width:651px)").addEventListener("change",e=>{if(e.matches)document.querySelectorAll(".ui-filterbar").forEach(box=>box.open=true)});

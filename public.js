@@ -9,6 +9,8 @@ async function publicRanking(q){
  const metric=q.get('metric')||'overall',base=await snapshot('ranking:'+metric),all=(await snapshot('ranking:overall')).rows;
  const matches=r=>['club','country','position','style'].every(k=>!q.get(k)||r[k]===q.get(k))&&(!q.get('search')||r.name.toLowerCase().includes(q.get('search').toLowerCase()))&&(!q.get('position_group')||q.get('position')||!publicGroups[q.get('position_group')]||publicGroups[q.get('position_group')].includes(r.position));
  const filtered=base.rows.filter(matches),quality=all.filter(matches).slice(0,20),boot=await snapshot('bootstrap'),byId=new Map(boot.players.map(p=>[p.id,p]));
+ const sort=q.get('sort')||'metric-desc',direction=sort.endsWith('-asc')?1:-1,key=sort.startsWith('skills-')?'skills_count':sort.startsWith('updated-')?'updated_at':sort.startsWith('overall-')?'overall':'value';
+ filtered.sort((a,b)=>direction*(key==='updated_at'?String(a[key]||'').localeCompare(String(b[key]||'')):Number(a[key]||0)-Number(b[key]||0))||String(a.id).localeCompare(String(b.id)));
  const summary={count:all.filter(matches).length,average:publicMean(quality.map(r=>r.overall))};
  for(const k of boot.active_main_ratings)summary[k]=publicMean(quality.filter(r=>r.position!=='GK').map(r=>byId.get(r.id)?.rating?.final_main_ratings?.[k]).filter(v=>v!=null));
  const size=[25,50,100].includes(Number(q.get('size')))?Number(q.get('size')):25,page=Math.max(1,Math.min(Number(q.get('page'))||1,Math.max(1,Math.ceil(filtered.length/size))));
