@@ -15,6 +15,26 @@ function entityBench(players, starters){
  for(const p of pool){if(bench.length>=7)break;if(!used.has(p.id)){bench.push(p);used.add(p.id)}}
  return bench;
 }
+function entitySwap(slots,bench,first,second){
+ const values=Object.fromEntries(Object.entries(slots).map(([k,v])=>[k,{...v}]));
+ const ids=[...bench];
+ if(!first.slot&&!second.slot){
+  const a=ids.indexOf(first.id),b=ids.indexOf(second.id);
+  if(a<0||b<0)return null;
+  [ids[a],ids[b]]=[ids[b],ids[a]];
+ }else if(first.slot&&second.slot){
+  const a=values[first.slot].player_id;
+  values[first.slot]={player_id:values[second.slot].player_id,manual:true};
+  values[second.slot]={player_id:a,manual:true};
+ }else{
+  const slot=first.slot||second.slot,id=first.id||second.id,index=ids.indexOf(id);
+  if(!slot||index<0)return null;
+  const outgoing=values[slot].player_id;
+  values[slot]={player_id:id,manual:true};
+  if(outgoing)ids[index]=outgoing;else ids.splice(index,1);
+ }
+ return {slots:values,bench:ids};
+}
 async function entityFormation(kind,name,q){
  const page=app.querySelector('.entity-page'),hash=location.hash;
  let d;try{d=await api('entity-overview?'+new URLSearchParams({kind,key:name}))}catch(e){toast('נדרשת הפעלה מחדש של האתר כדי לטעון את מערכת ההרכבים החדשה');return}
@@ -49,26 +69,64 @@ async function entityFormation(kind,name,q){
    }
    if(seq!==request||!page.isConnected)return;
    const definitions=d.formations[formation],midSlots=definitions.filter(s=>s.positions.some(p=>['DM','CM','AM'].includes(p))),triangle=midSlots.length===3;
-   const selected=new Set(Object.values(result.slots).map(s=>s.player_id)),bench=entityBench(d.players,selected);
-   lineHost.innerHTML=`<div class="lineup-toolbar"><div><small>מערך</small><strong dir="ltr">${esc(formation)}</strong></div><button class="secondary" data-reset-lineup>איפוס להרכב אוטומטי</button><span class="muted lineup-save-status" role="status">${result.saved?'נשמר במסד':'הרכב אוטומטי'}</span></div><div class="formation-options">${[['CLASSIC',['4-3-3','4-4-2','4-2-3-1','4-3-1-2']],['CONTROL',['4-3-3 Holding','5-3-2','5-4-1']]].map(([label,items])=>`<div><small>${label}</small><div class="formation-chips">${items.map(f=>`<button data-formation="${esc(f)}" aria-pressed="${f===formation}" dir="ltr">${esc(f)}</button>`).join('')}</div></div>`).join('')}</div>${Formation.pitch(definitions.map(s=>{const p=d.players.find(r=>r.id===result.slots[s.slot].player_id);return {...s,...(triangle&&midSlots.includes(s)?{row:2,triangle:String(midSlots.indexOf(s)+1)}:{}),player:p?{id:p.id,name:p.name,rating:p.display,position:p.position}:null}}),{label:"הרכב "+formation})}<div class="entity-bench" aria-label="מחליפים"><small>מחליפים</small><div>${bench.map(p=>`<button data-bench-player="${p.id}">${UI.Portrait(p.id)}<span>${esc(p.name)}</span><small>${esc(p.position)}</small>${UI.RatingBadge(p.display)}</button>`).join('')}</div></div><div data-lineup-picker></div>`;
-   lineHost.querySelectorAll('[data-bench-player]').forEach(b=>b.onclick=()=>openPlayer(b.dataset.benchPlayer));
-   const store=async(values,reset=false)=>{
+   const selected=new Set(Object.values(result.slots).map(s=>s.player_id)),automaticBench=entityBench(d.players,selected);
+   const savedBench=pref.benches?.[formation],byId=new Map(d.players.map(p=>[p.id,p]));
+   const bench=savedBench?.revision===result.revision?savedBench.ids.map(id=>byId.get(id)).filter(p=>p&&!selected.has(p.id)):automaticBench;
+   lineHost.innerHTML=`<div class="lineup-toolbar"><div><small>מערך</small><strong dir="ltr">${esc(formation)}</strong></div><button class="secondary" data-reset-lineup>איפוס להרכב אוטומטי</button><span class="muted lineup-save-status" role="status">${result.saved?'נשמר במסד':'הרכב אוטומטי'}</span></div><div class="formation-options">${[['CLASSIC',['4-3-3','4-4-2','4-2-3-1','4-3-1-2']],['CONTROL',['4-3-3 Holding','5-3-2','5-4-1']]].map(([label,items])=>`<div><small>${label}</small><div class="formation-chips">${items.map(f=>`<button data-formation="${esc(f)}" aria-pressed="${f===formation}" dir="ltr">${esc(f)}</button>`).join('')}</div></div>`).join('')}</div>${Formation.pitch(definitions.map(s=>{const p=d.players.find(r=>r.id===result.slots[s.slot].player_id);return {...s,...(triangle&&midSlots.includes(s)?{row:2,triangle:String(midSlots.indexOf(s)+1)}:{}),player:p?{id:p.id,name:p.name,rating:p.display,position:p.position}:null}}),{label:"הרכב "+formation})}<div class="entity-bench" aria-label="מחליפים"><small>מחליפים</small><div>${bench.map(p=>`<button data-bench-player="${p.id}">${UI.Portrait(p.id)}<span>${esc(p.name)}</span><small>${esc(p.position)}</small>${UI.RatingBadge(p.display)}</button>`).join('')}</div></div><div class="lineup-swap-tools"><span data-swap-status role="status">בחרו שני שחקנים להחלפה</span><button class="secondary" data-swap-cancel hidden>ביטול</button><button class="secondary" data-swap-roster hidden>בחירה מהסגל</button></div><div data-lineup-picker></div>`;
+   const store=async(values,reset=false,benchIds=null)=>{
     if(busy)return;busy=true;lineHost.querySelectorAll('button').forEach(b=>b.disabled=true);
-    try{const next=await api(reset?'entity-lineup-reset':'entity-lineup-save',{kind,key:name,formation,slots:values,revision:result.revision});cache.set(formation,next);await drawLineup()}
+    try{const next=await api(reset?'entity-lineup-reset':'entity-lineup-save',{kind,key:name,formation,slots:values,revision:result.revision});cache.set(formation,next);
+     pref.benches=pref.benches||{};
+     if(reset)delete pref.benches[formation];
+     else if(benchIds)pref.benches[formation]={revision:next.revision,ids:benchIds};
+     persistEntityPanels();await drawLineup()}
     catch(e){cache.delete(formation);toast(e.message);await drawLineup()}
     finally{busy=false}
    };
    lineHost.querySelectorAll('[data-formation]').forEach(b=>b.onclick=()=>{if(busy)return;pref.formation=b.dataset.formation;persistEntityPanels();drawLineup()});
    lineHost.querySelector('[data-reset-lineup]').onclick=()=>store(null,true);
-   lineHost.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{
-    const slot=b.dataset.slot,current=result.slots[slot].player_id,used=new Set(Object.entries(result.slots).filter(([k])=>k!==slot).map(([,v])=>v.player_id));
+   const storeBench=async ids=>{
+    if(busy)return;
+    pref.benches=pref.benches||{};
+    pref.benches[formation]={revision:result.revision,ids};
+    persistEntityPanels();await drawLineup();
+   };
+   const openRoster=b=>{
+    const slot=b.dataset.slot,benchId=b.dataset.benchPlayer,current=slot?result.slots[slot].player_id:benchId,used=new Set(Object.entries(result.slots).filter(([k])=>k!==slot).map(([,v])=>v.player_id));
+    if(benchId)bench.forEach(p=>{if(p.id!==benchId)used.add(p.id)});
     const picker=lineHost.querySelector('[data-lineup-picker]');
-    picker.innerHTML=`<section class="lineup-picker" aria-label="בחירת שחקן"><div class="section-heading"><h3>בחירת שחקן · ${esc(definitions.find(s=>s.slot===slot).label)}</h3><button data-picker-close>סגירה</button></div><p class="muted">הבחירה משנה את ההרכב בלבד. עמדה ראשית ודירוג נשארים כפי שהם.</p><input type="search" data-picker-search placeholder="חיפוש שחקן" aria-label="חיפוש שחקן להרכב"><button data-pick="" class="secondary">השאר עמדה ריקה</button><div class="lineup-candidates">${d.players.filter(p=>!used.has(p.id)).map(p=>`<button data-pick="${p.id}" data-name="${esc(p.name.toLowerCase())}" aria-pressed="${p.id===current}">${UI.Portrait(p.id)}<strong>${esc(p.name)}</strong>${UI.PositionChip(p.position)}${UI.RatingBadge(p.display)}</button>`).join('')}</div></section>`;
+    picker.innerHTML=`<section class="lineup-picker" aria-label="בחירת שחקן"><div class="section-heading"><h3>בחירת שחקן · ${esc(slot?definitions.find(s=>s.slot===slot).label:'ספסל')}</h3><button data-picker-close>סגירה</button></div><p class="muted">הבחירה משנה את ההרכב בלבד. עמדה ראשית ודירוג נשארים כפי שהם.</p><input type="search" data-picker-search placeholder="חיפוש שחקן" aria-label="חיפוש שחקן להרכב">${slot?'<button data-pick="" class="secondary">השאר עמדה ריקה</button>':''}<div class="lineup-candidates">${d.players.filter(p=>!used.has(p.id)&&(!benchId||p.position!=='GK')).map(p=>`<button data-pick="${p.id}" data-name="${esc(p.name.toLowerCase())}" aria-pressed="${p.id===current}">${UI.Portrait(p.id)}<strong>${esc(p.name)}</strong>${UI.PositionChip(p.position)}${UI.RatingBadge(p.display)}</button>`).join('')}</div></section>`;
     picker.querySelector('[data-picker-close]').onclick=()=>{picker.innerHTML='';b.focus()};
     picker.querySelector('[data-picker-search]').oninput=e=>picker.querySelectorAll('[data-name]').forEach(x=>x.hidden=!x.dataset.name.includes(e.target.value.toLowerCase()));
-    picker.querySelectorAll('[data-pick]').forEach(x=>x.onclick=()=>store({...result.slots,[slot]:{player_id:x.dataset.pick||null,manual:true}}));
+    picker.querySelectorAll('[data-pick]').forEach(x=>x.onclick=()=>{
+     if(benchId)storeBench(bench.map(p=>p.id===benchId?x.dataset.pick:p.id));
+     else store({...result.slots,[slot]:{player_id:x.dataset.pick||null,manual:true}});
+    });
     picker.querySelector('input').focus();picker.scrollIntoView({block:'nearest',behavior:'smooth'});
-   });
+   };
+   let swapSelection=null;
+   const cancel=lineHost.querySelector('[data-swap-cancel]'),roster=lineHost.querySelector('[data-swap-roster]'),status=lineHost.querySelector('[data-swap-status]');
+   const mark=(choice,button)=>{
+    swapSelection=choice?{choice,button}:null;
+    lineHost.querySelectorAll('[data-slot],[data-bench-player]').forEach(b=>{const active=b===button;b.classList.toggle('is-swap-selected',active);b.setAttribute('aria-pressed',String(active))});
+    cancel.hidden=!choice;roster.hidden=!choice;
+    status.textContent=choice?'נבחר להחלפה · לחצו על שחקן נוסף':'בחרו שני שחקנים להחלפה';
+    lineHost.querySelector('[data-lineup-picker]').innerHTML='';
+   };
+   const choose=(choice,button)=>{
+    if(busy)return;
+    if(!swapSelection){mark(choice,button);return}
+    if(swapSelection.button===button){mark(null,null);return}
+    const change=entitySwap(result.slots,bench.map(p=>p.id),swapSelection.choice,choice);
+    if(change){
+     if(!swapSelection.choice.slot&&!choice.slot)storeBench(change.bench);
+     else store(change.slots,false,change.bench);
+    }
+   };
+   cancel.onclick=()=>mark(null,null);
+   roster.onclick=()=>{if(swapSelection)openRoster(swapSelection.button)};
+   lineHost.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>choose({slot:b.dataset.slot},b));
+   lineHost.querySelectorAll('[data-bench-player]').forEach(b=>b.onclick=()=>choose({id:b.dataset.benchPlayer},b));
   }catch(e){if(seq===request&&page.isConnected)lineHost.innerHTML=`<p role="alert">${esc(e.message)}</p>`}
  };
  const show=tab=>{page.dataset.panel=tab;

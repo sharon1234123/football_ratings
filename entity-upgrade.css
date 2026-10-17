@@ -422,3 +422,13 @@ select[dir=ltr]{background-position:right 8px center!important;padding-right:27p
 /* Six rows in the narrow diamond: preserve readable portraits and labels. */
 #app .entity-page .pitch-rows:has(>.pitch-row:nth-child(6)){height:530px}
 @media(max-width:650px){#app .entity-page .pitch-rows:has(>.pitch-row:nth-child(6)){height:510px}}
+
+/* Two-click manual lineup swaps, shared by club and country. */
+#app .entity-page .lineup-swap-tools{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--entity-accent,#d7b65f)}
+#app .entity-page .lineup-swap-tools button{min-height:32px;padding:4px 10px}
+#app .entity-page .is-swap-selected{outline:2px solid var(--entity-accent,#d7b65f);outline-offset:2px;box-shadow:0 0 12px #e0c57530;border-radius:10px}
+@media(max-width:1050px){
+ #app .entity-page .entity-bench{display:block;grid-column:1/-1}
+ #app .entity-page .entity-bench>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ #app .entity-page .entity-bench button{min-width:0;min-height:64px}
+}
