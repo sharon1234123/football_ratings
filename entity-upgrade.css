@@ -360,3 +360,65 @@ select[dir=ltr]{background-position:right 8px center!important;padding-right:27p
 @media(max-width:1050px){#app .home-lineup-preview{width:100%;max-width:430px;align-self:center}}
 
 @media(min-width:1051px){#app .entity-page[data-lineup-eligible="false"] .entity-hero{grid-column:2/-1}#app .entity-page[data-lineup-eligible="false"] .entity-hero-bottom{flex-direction:row;align-items:start}#app .entity-page[data-lineup-eligible="false"] .entity-top-three,#app .entity-page[data-lineup-eligible="false"] .department-ratings{width:50%}#app .entity-page[data-lineup-eligible="false"] .roster-composition{justify-content:flex-start}}
+/* Entity showcase: one shared panel/pitch layout, using existing assets. */
+.entity-page{--entity-primary:#dbc48d;--entity-secondary:#263847}
+#app .entity-page .entity-hero{border-top:2px solid var(--entity-primary);background:linear-gradient(145deg,var(--entity-secondary),#172029 75%)}
+#app .entity-page .pitch-player .player-portrait{border-color:var(--entity-primary)}
+#app .entity-page .pitch-player-meta .ui-rating{background:#e0c687;color:#20241e;border:0;border-radius:5px;font-weight:750}
+#app .entity-page .formation-chips [aria-pressed=true]{border-color:var(--entity-primary);color:var(--entity-primary);background:var(--entity-secondary)}
+#app .entity-page .entity-pitch{max-width:none;width:100%}
+#app .entity-page .pitch-rows{height:402px;padding:10px 6px;gap:3px}
+#app .entity-page .pitch-rows:has(>.pitch-row:nth-child(5)){height:428px}
+#app .entity-page .pitch-row{min-height:78px}
+#app .entity-page .pitch-player .player-portrait,#app .entity-page .pitch-player .player-portrait img{width:38px;height:38px;min-width:38px;flex-shrink:0}
+#app .entity-page .pitch-midfield-trio{height:112px;min-height:112px}
+#app .entity-page .pitch-midfield-trio>[data-triangle="1"]{left:28%;top:35px}
+#app .entity-page .pitch-midfield-trio>[data-triangle="2"]{left:72%;top:35px}
+#app .entity-page .pitch-midfield-trio>[data-triangle="3"]{left:50%;top:0}
+.entity-bench{grid-column:1/-1;min-width:0;border-top:1px solid #ffffff10;padding-top:6px}
+.entity-bench>small{font-size:10px;color:var(--muted)}
+.entity-bench>div{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:4px}
+.entity-bench button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:4px 2px;background:#ffffff03;border:0}
+.entity-bench button>span:not(.player-portrait):not(.ui-rating){font-size:9px;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.entity-bench .player-portrait,.entity-bench .player-portrait img{width:25px;height:25px;min-width:25px;margin:0}
+.entity-bench button>small{font-size:8px;color:var(--muted)}
+.entity-bench .ui-rating{font-size:11px;min-height:16px;height:16px;padding:0 4px;min-width:23px}
+@media(min-width:1051px){
+ #app .entity-page[data-entity-kind]{grid-template-columns:64px minmax(265px,30fr) minmax(470px,70fr);gap:10px}
+ #app .entity-page .entity-lineup{grid-template-columns:104px minmax(0,1fr);padding:9px;gap:7px}
+ #app .entity-page .entity-hero{padding:13px}
+ #app .entity-page .formation-chips{flex-direction:column;align-items:stretch}
+ #app .entity-page .formation-chips button{width:100%}
+ #app .entity-page .formation-options>div>small{font-size:9px;letter-spacing:.08em}
+}
+@media(max-width:1050px){
+ #app .entity-page .entity-lineup{display:block;width:100%;margin:0 0 10px}
+ #app .entity-page .entity-hero{margin-bottom:8px}
+ #app .entity-page .formation-options{display:flex;gap:8px;margin-block:8px}
+ #app .entity-page .entity-bench{display:none}
+}
+@media(max-width:650px){
+ #app .entity-page .pitch-rows{height:390px;padding-inline:3px}
+ #app .entity-page .pitch-rows:has(>.pitch-row:nth-child(5)){height:420px}
+ #app .entity-page .pitch-player .player-portrait,#app .entity-page .pitch-player .player-portrait img{width:33px;height:33px;min-width:33px}
+ #app .entity-page .pitch-name{font-size:9px;line-height:1.2}
+}
+/* Entity identity: scoped accents only; the pitch turf remains unchanged. */
+.entity-page{--entity-accent:#dbc48d}
+#app .entity-page .entity-lineup{border:1px solid color-mix(in srgb,var(--entity-primary) 50%,#26313d);border-top:3px solid var(--entity-primary);box-shadow:inset 0 2px 0 var(--entity-secondary);background:linear-gradient(125deg,color-mix(in srgb,var(--entity-secondary) 45%,#17212b),#17212b 75%)}
+#app .entity-page .entity-hero{border:1px solid color-mix(in srgb,var(--entity-primary) 40%,#29313c);border-top:3px solid var(--entity-primary);background:linear-gradient(140deg,color-mix(in srgb,var(--entity-secondary) 75%,#172029),#172029 85%)}
+#app .entity-page .entity-hero h1{color:color-mix(in srgb,var(--entity-primary) 65%,#fff)}
+#app .entity-page .pitch-player .player-portrait,#app .entity-page .entity-top-three .player-portrait,#app .entity-page .entity-bench .player-portrait{border:2px solid var(--entity-primary);box-shadow:0 0 0 1px var(--entity-secondary)}
+#app .entity-page .pitch-player-meta .ui-rating,#app .entity-page .entity-top-three .ui-rating,#app .entity-page .entity-bench .ui-rating{background:var(--entity-primary);color:#121820;border:1px solid var(--entity-accent);font-weight:750}
+#app .entity-page .formation-chips [aria-pressed=true]{background:var(--entity-primary);color:#121820;border:1px solid var(--entity-accent);box-shadow:0 2px 0 var(--entity-secondary);font-weight:750}
+#app .entity-page .entity-top-three>button,#app .entity-page .entity-bench button{background:color-mix(in srgb,var(--entity-secondary) 45%,#18222b);border:1px solid color-mix(in srgb,var(--entity-primary) 24%,#26313c);border-inline-start:3px solid var(--entity-primary);border-radius:8px}
+#app .entity-page .entity-top-three>button:hover,#app .entity-page .entity-bench button:hover,#app .entity-page .formation-chips button:hover,#app .entity-page .lineup-candidates button:hover{background:color-mix(in srgb,var(--entity-secondary) 75%,#24313d);color:#fff;border-color:var(--entity-accent)}
+#app .entity-page .pitch-player:hover{background:color-mix(in srgb,var(--entity-secondary) 45%,transparent)}
+#app .entity-page .pitch-player:focus-visible,#app .entity-page .entity-bench button:focus-visible,#app .entity-page .entity-top-three button:focus-visible{outline:2px solid var(--entity-accent);outline-offset:2px}
+#app .entity-page .entity-tabs [aria-selected=true]{color:var(--entity-primary);border-color:var(--entity-accent)}
+#app .entity-page .lineup-candidates [aria-pressed=true]{border-color:var(--entity-accent);background:color-mix(in srgb,var(--entity-secondary) 65%,#17212b)}
+#app .entity-page .department-ratings b,#app .entity-page .entity-hero-summary strong{color:var(--entity-accent)}
+
+/* Six rows in the narrow diamond: preserve readable portraits and labels. */
+#app .entity-page .pitch-rows:has(>.pitch-row:nth-child(6)){height:530px}
+@media(max-width:650px){#app .entity-page .pitch-rows:has(>.pitch-row:nth-child(6)){height:510px}}
