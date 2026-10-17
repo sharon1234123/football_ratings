@@ -7,7 +7,7 @@ async function entityFormation(kind,name,q){
  let d;try{d=await api('entity-overview?'+new URLSearchParams({kind,key:name}))}catch(e){toast('נדרשת הפעלה מחדש של האתר כדי לטעון את מערכת ההרכבים החדשה');return}
  if(!page.isConnected||location.hash!==hash)return;
  const panelKey=kind+':'+name,pref=entityPanels.get(panelKey)||{tab:'overview',formation:'4-3-3'};
- entityPanels.set(panelKey,pref);
+ entityPanels.set(panelKey,pref);page.dataset.lineupEligible=String(d.eligible);
  const oldTitle=page.querySelector('.title'),summary=page.querySelector('.entity-summary');
  const rosterCounts=Object.fromEntries(Object.entries({GK:['GK'],DEF:['RB','LB','RCB','LCB'],MID:['DM','CM','AM'],ATT:['RW','LW','CF']}).map(([key,positions])=>[key,d.players.filter(p=>positions.includes(p.position)).length]));
  const rosterSummary=`<div class="roster-composition" aria-label="מבנה הסגל"><span>סגל ${d.count}</span>${Object.entries(rosterCounts).map(([k,n])=>`<span><small>${({GK:"שוערים",DEF:"הגנה",MID:"קישור",ATT:"התקפה"})[k]}</small><b>${n}</b></span>`).join('')}</div>`;
@@ -54,7 +54,7 @@ async function entityFormation(kind,name,q){
    });
   }catch(e){if(seq===request&&page.isConnected)lineHost.innerHTML=`<p role="alert">${esc(e.message)}</p>`}
  };
- const show=tab=>{
+ const show=tab=>{page.dataset.panel=tab;
   if(tab==='abilities'){const el=page.querySelector('[data-er-ability]');if(el&&!el.value){el.value=state.catalog.abilities[0].id;el.dispatchEvent(new Event('change'));}}
   // Overview uses the same lineup and squad nodes, in document order.
   lineHost.hidden=!d.eligible||(tab==='squad'||tab==='abilities');
