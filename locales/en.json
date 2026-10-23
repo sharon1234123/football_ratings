@@ -676,5 +676,6 @@
   "v34.attack_pair": "Attack: higher Speed/Physical Contact gets 10%, lower gets 5%. Best remains Offensive Awareness/Heading.",
   "v34.rollback": "Rollback to V3.3",
   "v34.rollback_confirm": "Restore V3.3 and recalculate field players?",
-  "entities.jump": "Go to page"
+  "entities.jump": "Go to page",
+  "team_rankings": "Team rankings"
 }

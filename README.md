@@ -1,4 +1,4 @@
-# Football ratings — read-only snapshot
+# Football ratings ג€” read-only snapshot
 
 Generated from the private local project. No database, drafts, credentials, editing API or backend is published.
 

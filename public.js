@@ -18,6 +18,9 @@ async function publicRanking(q){
  return {...base,summary,comparison,total:filtered.length,page,size,rows:filtered.slice((page-1)*size,page*size)};
 }
 api=async function(path,body){
+ if(path==='team-contexts'){const rows=structuredClone(await snapshot('team-contexts:'+body.kind));for(const r of rows.filter(x=>x.eligible)){r.formation=body.preferences?.[r.name]||'4-3-3';r.lineup=await snapshot('lineup:'+body.kind+':'+r.name+':'+r.formation)}return rows}
+ if(path==='team-rating')return snapshot('team-rating:'+body.kind+':'+body.key+':'+body.formation);
+ if(path==='team-summaries')return Promise.all(body.selections.map(async b=>({kind:b.kind,name:b.key,...await snapshot('team-rating:'+b.kind+':'+b.key+':'+b.formation)})));
  if(body!==undefined)throw Error('גרסה לצפייה בלבד · העריכה נעשית במחשב המקומי');
  const [route,query='']=path.split('?'),q=new URLSearchParams(query);
  if(route==='bootstrap'||route==='draft-bootstrap')return structuredClone(await snapshot('bootstrap'));
@@ -38,3 +41,6 @@ const publicShell=shell;shell=function(){publicShell();document.querySelector('.
 const forbidden='[data-edit],[data-quick-edit],[data-save],[data-save-card],[data-propose-player],[data-review-player],[data-er-save],[data-bulk-apply],[data-reset-lineup],[data-pick],[data-remove-skill],[data-gk-promote],#gk-save,#gk-cancel';
 document.addEventListener('click',e=>{if(e.target.closest(forbidden)){e.preventDefault();e.stopImmediatePropagation()}},true);
 document.addEventListener('click',e=>{const slot=e.target.closest('[data-slot]');if(slot){e.preventDefault();e.stopImmediatePropagation()}},true);
+
+// Public bench matches the exported team calculation; no private preferences apply.
+const publicBenchSelector=selectedEntityBench;selectedEntityBench=function(players,result,pref,formation){return result.bench?result.bench.map(id=>players.find(p=>p.id===id)).filter(Boolean):publicBenchSelector(players,result,{},formation)};

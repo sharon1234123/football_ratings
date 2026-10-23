@@ -432,3 +432,191 @@ select[dir=ltr]{background-position:right 8px center!important;padding-right:27p
  #app .entity-page .entity-bench>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
  #app .entity-page .entity-bench button{min-width:0;min-height:64px}
 }
+
+/* Team Formula V1: one lineup, one compact summary. Home is unaffected. */
+#app .entity-page:has(.team-rating-layout){display:block}
+#app .entity-page:has(.team-rating-layout)>.entity-tabs{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;margin:10px 0;width:100%;position:static}
+#app .entity-page .team-rating-layout{display:grid;grid-template-columns:minmax(230px,280px) minmax(0,1fr);gap:14px;align-items:start;direction:rtl;margin-bottom:12px;min-width:0}
+#app .entity-page .team-panel{position:static;inset:auto;width:100%;height:auto;z-index:auto;overflow:visible;transform:none;min-width:0;padding:18px 16px;border:1px solid color-mix(in srgb,var(--entity-primary) 40%,#29333e);border-top:3px solid var(--entity-primary);border-radius:16px;background:linear-gradient(145deg,color-mix(in srgb,var(--entity-secondary) 30%,#182029),#151d25 75%)}
+#app .entity-page .team-identity{display:flex;align-items:center;gap:10px}
+#app .entity-page .team-identity>div{min-width:0;flex:1}
+#app .entity-page .team-identity h1{font-size:23px;line-height:1.2;margin:4px 0;color:#f3eddf;overflow-wrap:anywhere}
+#app .entity-page .team-identity small{font-size:10px;color:#aab6c2}
+#app .entity-page .team-identity .entity-emblem{width:42px;height:42px;flex:0 0 42px}
+#app .entity-page .team-identity button{padding:4px;min-width:28px;min-height:28px}
+#app .entity-page .team-panel .roster-composition{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0;color:#bcc6cf}
+#app .entity-page .team-panel .roster-composition>span:first-child{flex-basis:100%;border:0;background:none;padding:0 0 3px}
+#app .entity-page .team-panel .roster-composition>span{display:flex;align-items:center;gap:5px;padding:4px 6px;border-radius:6px;background:#ffffff04;font-size:12px}
+#app .entity-page .team-overall{display:flex;flex-direction:column;align-items:center;border-block:1px solid #ffffff0b;padding:16px 0;margin-bottom:14px;color:var(--entity-accent,#dfcda5)}
+#app .entity-page .team-overall>small{font-size:10px;letter-spacing:.18em;color:#afbbc8}
+#app .entity-page .team-overall>strong{font-size:72px;line-height:1.2;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-3px}
+#app .entity-page .team-overall>span{font-size:11px;color:#9eacb9}
+#app .entity-page .team-main-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;direction:ltr}
+#app .entity-page .team-main-grid>div{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 3px;background:#ffffff03;border:1px solid #ffffff0b;border-radius:9px}
+#app .entity-page .team-main-grid small{font-size:10px;color:#acbac7;white-space:nowrap}
+#app .entity-page .team-main-grid b{font-size:24px;line-height:1.15;color:#eee5d2;font-variant-numeric:tabular-nums}
+#app .entity-page .team-rating-note{font-size:11px;line-height:1.6;color:#93a3b1;text-align:center;margin:14px 0 0}
+#app .entity-page [data-team-rating][aria-busy=true]{opacity:.55}
+#app .entity-page .team-rating-layout .entity-lineup{grid-column:auto;grid-row:auto;display:block;width:100%;max-width:none;margin:0;padding:12px;min-width:0;border-top-width:2px;box-shadow:none;background:#172129}
+#app .entity-page .team-rating-layout .entity-lineup[hidden]{display:none}
+#app .entity-page .team-rating-layout .lineup-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 8px}
+#app .entity-page .team-rating-layout .lineup-toolbar>div{display:flex;gap:7px;align-items:center;margin-inline-end:auto}
+#app .entity-page .team-rating-layout .lineup-toolbar button{min-height:30px;padding:4px 8px;font-size:11px}
+#app .entity-page .team-rating-layout .lineup-save-status{font-size:10px}
+#app .entity-page .team-rating-layout .formation-options{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 10px}
+#app .entity-page .team-rating-layout .formation-options>div{display:flex;gap:6px;align-items:center}
+#app .entity-page .team-rating-layout .formation-options>div>small{font-size:8px;letter-spacing:.06em;color:#8e9eab}
+#app .entity-page .team-rating-layout .formation-chips{display:flex;flex-direction:row;flex-wrap:wrap;gap:4px}
+#app .entity-page .team-rating-layout .formation-chips button{width:auto;min-height:29px;padding:4px 8px;font-size:10px}
+#app .entity-page .team-rating-layout .formation-chips [aria-pressed=true]{background:var(--entity-secondary);color:#f3eddf;border-color:var(--entity-accent);box-shadow:none}
+#app .entity-page .team-rating-layout .pitch-player-meta .ui-rating,#app .entity-page .team-rating-layout .entity-bench .ui-rating{background:#222c32;color:var(--entity-accent);border-color:color-mix(in srgb,var(--entity-primary) 50%,#3a454d)}
+#app .entity-page .team-rating-layout .entity-bench{display:block;margin:10px 0}
+#app .entity-page .team-rating-layout .entity-bench>div{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+#app .entity-page .team-rating-layout .entity-bench button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 3px;min-height:0;min-width:0;border-inline-start-width:1px;background:#ffffff03}
+#app .entity-page .team-rating-layout .entity-bench button>span:not(.player-portrait):not(.ui-rating){font-size:10px;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
+#app .entity-page .team-rating-layout .entity-bench .player-portrait{width:30px;height:30px;min-width:30px;flex:0 0 30px}
+#app .entity-page .team-rating-layout .entity-bench .player-portrait img{width:100%;height:100%}
+#app .entity-page .team-rating-layout .entity-bench button>small{font-size:9px}
+#app .entity-page .team-rating-layout .entity-bench .ui-rating{font-size:12px;padding:2px 5px;min-width:25px;min-height:0}
+#app .entity-page .team-rating-layout .lineup-swap-tools{font-size:11px;gap:6px}
+@media(max-width:900px){
+ #app .entity-page .team-rating-layout{grid-template-columns:minmax(0,1fr)}
+ #app .entity-page .team-panel{padding:14px}
+ #app .entity-page .team-overall{padding:10px 0;margin-bottom:10px}
+ #app .entity-page .team-overall>strong{font-size:60px}
+ #app .entity-page .team-main-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+ #app .entity-page .team-main-grid>div{padding:7px 2px}
+ #app .entity-page .team-main-grid small{font-size:9px}
+ #app .entity-page .team-rating-note{margin-top:9px}
+ #app .entity-page .team-rating-layout .entity-bench>div{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #app .entity-page .team-rating-layout .formation-options>div{flex-wrap:wrap}
+}
+@media(max-width:360px){#app .entity-page .team-main-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Selected squad 18: compact entity-only layout; no player/home pitch changes. */
+#app .entity-page .team-rating-layout{gap:12px;margin-bottom:8px}
+#app .entity-page .team-panel{padding:12px;border-color:#ffffff12;border-top:2px solid color-mix(in srgb,var(--entity-primary) 45%,#29333e);background:#172029}
+#app .entity-page .team-panel .roster-composition{margin:8px 0;gap:4px}
+#app .entity-page .team-panel .roster-composition>span{padding:2px 4px;font-size:11px}
+#app .entity-page .team-overall{padding:9px 0;margin-bottom:7px}
+#app .entity-page .team-overall>strong{font-size:60px;line-height:1.12}
+#app .entity-page .team-squad-average{text-align:center;font-size:12px;color:#afbbc8;margin:6px 0 9px}
+#app .entity-page .team-squad-average b{font-size:19px;color:#eee5d2;margin-inline-start:5px}
+#app .entity-page .team-main-grid{gap:4px}
+#app .entity-page .team-main-grid>div{padding:5px 2px;border-radius:7px}
+#app .entity-page .team-main-grid b{font-size:21px}
+#app .entity-page .team-rating-note{margin:7px 0 0;font-size:10px;line-height:1.4}
+#app .entity-page .team-rating-layout .entity-lineup{padding:9px;border-color:#ffffff12}
+#app .entity-page .team-rating-layout .lineup-toolbar{margin-bottom:5px;gap:5px}
+#app .entity-page .team-rating-layout .formation-options{gap:8px;margin-bottom:6px}
+#app .entity-page .team-rating-layout .formation-chips button{min-height:25px;padding:2px 7px}
+#app .entity-page .team-rating-layout .formation-chips [aria-pressed=true]{border-color:color-mix(in srgb,var(--entity-accent) 45%,#34404b);background:color-mix(in srgb,var(--entity-secondary) 45%,#202a34)}
+#app .entity-page .team-rating-layout .pitch-rows{height:350px;gap:2px}
+#app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(5)){height:380px}
+#app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(6)){height:465px}
+#app .entity-page .team-rating-layout .pitch-player{gap:1px;padding-block:1px}
+#app .entity-page .team-rating-layout .pitch-name{line-height:1.15;margin:0}
+#app .entity-page .team-rating-layout .entity-bench{margin:6px 0}
+#app .entity-page .team-rating-layout .entity-bench button{display:grid;grid-template-columns:24px minmax(0,1fr);align-content:center;gap:2px 4px;padding:5px 3px;border:1px solid #ffffff0b;border-radius:7px}
+#app .entity-page .team-rating-layout .entity-bench .player-portrait{grid-row:1/3;width:24px;height:24px;min-width:24px;flex-basis:24px}
+#app .entity-page .team-rating-layout .entity-bench button>span:not(.player-portrait):not(.ui-rating){font-size:10px;line-height:1.2;grid-column:2;max-height:24px;overflow:hidden}
+#app .entity-page .team-rating-layout .entity-bench button>small{grid-column:2;font-size:9px}
+#app .entity-page .team-rating-layout .entity-bench .ui-rating{grid-column:1/-1;justify-self:center;padding:0 4px;font-size:11px}
+#app .entity-page .team-rating-layout .lineup-swap-tools{margin:3px 0 0;min-height:20px}
+#app .entity-page .team-rating-layout .pitch-player .player-portrait,#app .entity-page .team-rating-layout .entity-bench .player-portrait{border-color:color-mix(in srgb,var(--entity-primary) 65%,#77818b);box-shadow:none}
+.entity-card-metrics{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.entity-card-metrics small{display:flex;gap:6px;align-items:center;color:#aeb9c6}
+.entity-card-metrics b{color:#eadcba;font-size:20px}
+.team-rankings{min-width:0}
+.team-ranking-filters{margin:10px 0;padding:10px}
+.team-ranking-filters>div{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+.team-ranking-filters label{display:grid;gap:4px;min-width:160px;font-size:12px}
+.team-ranking-table{border:1px solid #ffffff12;border-radius:12px;overflow:hidden}
+.team-ranking-table table{table-layout:fixed;width:100%;border-collapse:collapse}
+.team-ranking-table th,.team-ranking-table td{padding:9px 7px;text-align:center;overflow-wrap:anywhere}
+.team-ranking-table th:first-child{width:36px}
+.team-ranking-table th:nth-child(2){width:35%;text-align:right}
+.team-ranking-table td a{display:flex;align-items:center;gap:8px;text-align:right}
+.team-ranking-table .entity-emblem{width:28px;height:28px;flex:0 0 28px}
+.team-ranking-table th{font-size:11px;color:#aeb9c6}
+.team-ranking-table td{font-size:14px}
+.team-ranking-table tr+tr{border-top:1px solid #ffffff08}
+@media(max-width:900px){
+ #app .entity-page .team-main-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #app .entity-page .team-rating-layout .entity-bench>div{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #app .entity-page .team-rating-layout .pitch-rows{height:350px}
+ #app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(5)){height:380px}
+ #app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(6)){height:465px}
+ .team-ranking-table th,.team-ranking-table td{padding:8px 3px;font-size:11px}
+ .team-ranking-table th:first-child{width:24px}
+ .team-ranking-table td a{gap:4px}
+ .team-ranking-table .entity-emblem{width:22px;height:22px;flex-basis:22px}
+ .team-ranking-filters label{min-width:0;flex:1}
+ .team-ranking-filters select{width:100%;min-width:0}
+}
+/* Preserve readable two-line names and all goalkeeper content at every formation. */
+#app .entity-page .team-rating-layout .pitch-rows{height:auto;min-height:370px}
+#app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(5)){height:auto;min-height:410px}
+#app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(6)){height:auto;min-height:490px}
+#app .entity-page .team-rating-layout .pitch-player .player-portrait,#app .entity-page .team-rating-layout .pitch-player .player-portrait img{width:34px;height:34px;min-width:34px}
+#app .entity-page .team-rating-layout .pitch-row:not(.pitch-midfield-trio){min-height:74px}
+#app .entity-page:has(.team-rating-layout)>.entity-tabs>button{width:auto;flex:0 0 auto;min-height:30px;padding:4px 12px;font-size:12px}
+#app .entity-page .team-rating-layout .formation-options{border:0;padding:0}
+#app .entity-page .team-rating-layout .formation-options>div{padding:0;border:0;min-height:0}
+#app .entity-page .team-rating-layout .lineup-toolbar{padding-bottom:3px}
+#app .entity-page .team-rating-layout .formation-options>div{width:auto;flex:0 1 auto}
+#app .team-ranking-table table{min-width:0;width:100%}
+#app .team-ranking-table th,#app .team-ranking-table td{white-space:normal}
+#app .entity-page .team-rating-layout .formation-options{flex-direction:row;align-items:center}
+#app .entity-page .team-rating-layout .formation-options>div>small{margin-bottom:0}
+#app .entity-page .team-rating-layout .formation-chips{padding-bottom:0}
+#app .entity-page .team-rating-layout .entity-bench>small{margin:0 0 3px;line-height:1.2}
+@media(min-width:901px){#app .entity-page #entity-squad>.ui-filterbar{padding-block:6px}#app .entity-page #entity-squad>.ui-filterbar .filters{padding-block:6px;margin-block:0}}
+
+/* Team rankings: independent main and ability comparison, compact RTL controls. */
+.team-metric-strip{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}
+.team-metric-strip button{font-size:12px;min-height:30px;padding:4px 9px;border:1px solid #ffffff13;border-radius:7px}
+.team-metric-strip [aria-pressed=true]{color:#efdfbb;border-color:#c9ac7066;background:#c9ac7014}
+.team-ability-compare{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0;color:#aeb9c6}
+.team-ability-compare label{display:flex;align-items:center;gap:8px;font-size:12px}
+.team-ability-compare select{width:150px;min-height:30px;padding-block:3px}
+.team-ability-compare small{font-size:11px}
+.team-ranking-table th button{border:0;background:transparent;padding:2px;min-height:28px;font-size:11px;color:inherit}
+.team-ranking-table th[aria-sort=ascending],.team-ranking-table th[aria-sort=descending]{color:#efdfbb}
+.team-ranking-table td:not(:nth-child(2)){color:#e8d9b7;font-variant-numeric:tabular-nums}
+.team-ranking-table th:nth-child(2){width:28%}
+.virtual-gk-label{display:block;font-size:10px;color:#aeb9c6;font-weight:400;margin-top:2px}
+.team-ranking-pages{justify-content:center;margin:12px 0;font-size:12px}
+#app .entity-page .team-panel{padding:10px}
+#app .entity-page .team-overall{padding:6px 0;margin-bottom:5px}
+#app .entity-page .team-overall>strong{font-size:54px}
+#app .entity-page .team-main-grid>div{padding:4px 2px}
+#app .entity-page .team-main-grid b{font-size:20px}
+#app .entity-page .team-rating-layout .entity-lineup{padding:7px}
+#app .entity-page .team-rating-layout .formation-chips button{min-height:23px;padding:1px 6px}
+#app .entity-page .team-rating-layout .pitch-rows{min-height:334px;padding:5px;gap:1px}
+#app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(5)){min-height:370px}
+#app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(6)){min-height:440px}
+#app .entity-page .team-rating-layout .pitch-row:not(.pitch-midfield-trio){min-height:66px}
+#app .entity-page .team-rating-layout .pitch-midfield-trio{height:103px;min-height:103px}
+#app .entity-page .team-rating-layout .pitch-player .player-portrait,#app .entity-page .team-rating-layout .pitch-player .player-portrait img{width:30px;height:30px;min-width:30px}
+#app .entity-page .team-rating-layout .pitch-player-meta .ui-rating,#app .entity-page .team-rating-layout .entity-bench .ui-rating{color:#efdfbb;background:#c9ac7012;border-color:#c9ac702b}
+#app .entity-page .team-rating-layout .entity-bench button{padding:3px;gap:1px 3px}
+#app .entity-page .is-temporary-gk:disabled{opacity:.85;cursor:default}
+@media(max-width:600px){.team-ability-compare{align-items:flex-start;flex-direction:column;gap:6px}.team-metric-strip{gap:4px}.team-metric-strip button{font-size:11px;padding:4px 7px}.team-ranking-table th:nth-child(2){width:28%}.team-ranking-table th button{font-size:10px}.team-ranking-table td a{flex-direction:column;align-items:flex-start}.virtual-gk-label{font-size:9px}}
+#app .entity-page .team-rating-layout .entity-bench button>small{line-height:10px}
+#app .entity-page .team-rating-layout .entity-bench .ui-rating{height:14px;line-height:14px}
+#app .entity-page .team-rating-layout .entity-bench{margin-block:3px}
+#app .entity-page .team-main-grid>div{gap:2px;padding:3px 2px}
+#app .entity-page .team-main-grid small{line-height:12px}
+#app .entity-page .team-main-grid b{line-height:22px}
+#app .entity-page .team-rating-layout .lineup-toolbar{margin-bottom:3px;padding-bottom:1px}
+#app .entity-page .team-rating-layout .formation-options{margin-bottom:4px}
+
+/* All eight squad main averages remain visible in each team row. */
+#app .team-ranking-table{overflow-x:auto}
+#app .team-ranking-table table{min-width:1060px}
+#app .team-ranking-table th:nth-child(2){width:165px}
+#app .team-ranking-table th:first-child{width:30px}
+#app .team-ranking-table th,#app .team-ranking-table td{padding:9px 5px}
+#app .team-ranking-table th button{font-size:11px;line-height:1.3}
+@media(max-width:600px){#app .team-ranking-table table{min-width:1030px}#app .team-ranking-table td a{flex-direction:row;align-items:center}#app .team-ranking-table th:nth-child(2){width:140px}}
