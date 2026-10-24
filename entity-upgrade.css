@@ -620,3 +620,140 @@ select[dir=ltr]{background-position:right 8px center!important;padding-right:27p
 #app .team-ranking-table th,#app .team-ranking-table td{padding:9px 5px}
 #app .team-ranking-table th button{font-size:11px;line-height:1.3}
 @media(max-width:600px){#app .team-ranking-table table{min-width:1030px}#app .team-ranking-table td a{flex-direction:row;align-items:center}#app .team-ranking-table th:nth-child(2){width:140px}}
+/* Team V1.1: compact surfaces and neutral result colors; entity color is an accent. */
+#app .team-rating-layout{gap:10px}
+#app .entity-page .team-panel{padding:8px;border-color:color-mix(in srgb,var(--entity-primary) 22%,#303844);background:#17202a}
+#app .entity-page .team-main-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+#app .entity-page .team-main-grid>div{display:flex;align-items:center;justify-content:space-between;padding:4px 7px;background:#ffffff04;border:1px solid #ffffff09}
+#app .entity-page .team-main-grid small{font-size:10px;color:#b4bfcd}
+#app .entity-page .team-main-grid b{font-size:18px;color:#ecddba}
+#app .entity-page .team-overall>strong{font-size:48px;color:#ecddba}
+#app .entity-page .team-rating-note{margin:6px 0 0;font-size:10px;line-height:1.45}
+#app .entity-page .roster-composition{gap:5px;font-size:10px;padding-block:4px}
+#app .entity-page .team-rating-layout .entity-lineup{padding:6px}
+#app .entity-page .team-rating-layout .pitch-rows{min-height:292px;padding:3px}
+#app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(5)){min-height:326px}
+#app .entity-page .team-rating-layout .pitch-rows:has(>.pitch-row:nth-child(6)){min-height:388px}
+#app .entity-page .team-rating-layout .pitch-row:not(.pitch-midfield-trio){min-height:58px}
+#app .entity-page .team-rating-layout .pitch-midfield-trio{height:94px;min-height:94px}
+#app .entity-page .team-rating-layout .pitch-name{font-size:10px;line-height:1.12}
+#app .entity-page .team-rating-layout .pitch-player .player-portrait,#app .entity-page .team-rating-layout .pitch-player .player-portrait img{width:28px;height:28px;min-width:28px}
+#app .entity-page .team-rating-layout .formation-chips button{min-height:22px;padding:1px 5px;font-size:10px}
+#app .entity-page .team-rating-layout .formation-chips button[aria-pressed=true]{color:#ecddba;background:color-mix(in srgb,var(--entity-secondary) 40%,#202733);border-color:color-mix(in srgb,var(--entity-primary) 45%,#59606a)}
+#app .entity-page .team-rating-layout .entity-bench>div{direction:ltr;gap:3px}
+#app .entity-page .team-rating-layout .entity-bench button{direction:rtl;background:#19222a;border-color:#ffffff10;padding:3px}
+#app .entity-page .team-rating-layout .ui-rating{color:#efdfbb;background:#c9ac7012;border-color:#c9ac702b}
+#app .entity-page .team-rating-layout .is-swap-selected{border-color:var(--entity-primary);box-shadow:0 0 0 1px color-mix(in srgb,var(--entity-primary) 35%,transparent)}
+#app .team-rankings>h1{margin-bottom:12px;color:#eee3cb}
+#app .team-metric-strip{padding:10px;background:#19212a;border:1px solid #ffffff13;border-radius:10px;gap:6px}
+#app .team-metric-strip button[aria-pressed=true]{background:#c8ad7024;border-color:#d1b77c99;color:#f3e4c0}
+#app .team-ability-compare{padding:4px 2px 10px}
+#app .team-ranking-table table{min-width:0;table-layout:fixed}
+#app .team-ranking-table th:nth-child(2){width:30%}
+#app .team-ranking-table thead{background:#26303b}
+#app .team-ranking-table tbody{background:#161d25}
+#app .team-ranking-table tbody tr:nth-child(even){background:#1b232c}
+#app .team-ranking-table tbody tr:hover{background:#28323d}
+#app .team-ranking-table td:not(:nth-child(2)){color:#c4cfdb}
+#app .team-ranking-table .is-sorted,#app .team-ranking-table th[aria-sort=ascending],#app .team-ranking-table th[aria-sort=descending]{background:#d0b77a12;color:#f1dfb6}
+#app .team-ranking-table td:last-child{color:#edddb8;font-weight:650}
+.ability-excess>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.ability-excess a{display:grid;gap:6px;padding:10px;background:#ffffff04;border:1px solid #ffffff12;border-radius:8px;text-decoration:none}
+.ability-excess strong{display:flex;justify-content:space-between;gap:8px}.ability-excess b{color:#e5cf9f}.ability-excess small{color:#abb9c8;font-size:11px}
+@media(max-width:600px){
+ #app .team-ranking-table table{min-width:500px}
+ #app .team-ranking-table th:nth-child(2){width:140px}
+ #app .entity-page .team-rating-layout .pitch-name{font-size:10px}
+ #app .entity-page .team-rating-layout .entity-bench>div{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .ability-excess>div{grid-template-columns:1fr}
+ #app .entity-page .team-main-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+#app .team-rankings>.entity-tabs{display:flex;gap:6px;border-bottom:1px solid #ffffff12;padding-bottom:8px}
+#app .team-rankings>.entity-tabs>button{width:auto;flex:0 0 auto;min-height:32px;padding:5px 18px}
+#app .team-ranking-table td.is-sorted{color:#f1dfb6}
+@media(max-width:600px){
+ #app .team-ranking-table table{min-width:0;width:100%}
+ #app .team-ranking-table th:nth-child(2){width:32%}
+ #app .team-ranking-table th:first-child{width:20px}
+ #app .team-ranking-table th,#app .team-ranking-table td{padding:8px 3px;font-size:11px}
+ #app .team-ranking-table td a{gap:4px;font-size:11px;line-height:1.3}
+ #app .team-ranking-table th button{font-size:10px;overflow-wrap:normal}
+}
+
+/* Show every team main rating together in one comparison row. */
+#app .team-ranking-table{overflow-x:auto}
+#app .team-ranking-table table{min-width:1050px;width:100%;table-layout:fixed}
+#app .team-ranking-table th:nth-child(2){width:165px}
+#app .team-ranking-table th:first-child{width:28px}
+#app .team-ranking-table th,#app .team-ranking-table td{padding:9px 5px}
+#app .team-ranking-table th button{font-size:11px;line-height:1.3}
+@media(max-width:600px){
+ #app .team-ranking-table table{min-width:1050px}
+ #app .team-ranking-table th:nth-child(2){width:150px}
+ #app .team-ranking-table th:first-child{width:26px}
+}
+/* Focused team and workspace polish, October 2026. */
+#app .team-rankings>.entity-tabs{display:flex!important;flex-direction:row!important;gap:8px;border:0;margin:8px 0 14px}
+#app .team-rankings>.entity-tabs button{flex:0 0 auto!important;width:auto!important;border:1px solid #ffffff18;border-radius:8px;background:#1b242d}
+#app .team-rankings>.entity-tabs button[aria-selected=true]{background:#d1b77c22;color:#f3dfb4;border-color:#d1b77c80;box-shadow:inset 0 -2px #d1b77c}
+#app .team-ranking-table{border:1px solid #ffffff18;border-radius:12px}
+#app .team-ranking-table th{background:#25313d;border-inline-start:1px solid #ffffff0a}
+#app .team-ranking-table td{border-inline-start:1px solid #ffffff06}
+#app .team-ranking-table td.is-sorted{background:#d0b77a15}
+#app .team-ability-compare{align-items:center;margin:0 0 12px}
+#app .entity-page .team-panel{background:linear-gradient(145deg,color-mix(in srgb,var(--entity-secondary) 55%,#19212a),#151c23);border-color:color-mix(in srgb,var(--entity-primary) 35%,#28313b);padding:14px}
+#app .entity-page .team-identity{border-bottom:1px solid color-mix(in srgb,var(--entity-primary) 25%,transparent);padding-bottom:10px}
+#app .entity-page .team-identity h1{font-size:clamp(22px,2.2vw,32px);margin:3px 0}
+#app .entity-page .team-overall{padding:8px 0}
+#app .entity-page .team-overall strong{font-size:40px;line-height:1.1}
+#app .entity-page .team-squad-average{background:#ffffff07;border-radius:8px;padding:8px 10px;color:#ecdfc5}
+#app .entity-page .team-main-grid{gap:5px;margin:10px 0}
+#app .entity-page .team-main-grid>div{padding:6px 9px;background:#ffffff05;border-color:#ffffff10}
+#app .entity-page .team-rating-layout{gap:14px;margin-bottom:14px}
+#app .entity-page .team-rating-layout .entity-lineup{padding:10px;border-color:color-mix(in srgb,var(--entity-primary) 25%,#28313b)}
+#app .entity-page .team-rating-layout .pitch-player .player-portrait{border-color:color-mix(in srgb,var(--entity-primary) 65%,#d5c9ad)}
+#app .entity-page .entity-bench button:hover{background:color-mix(in srgb,var(--entity-secondary) 50%,#26303b)}
+#app .entity-clean-filters,#app .draft-filters{gap:7px;background:#192129;border-color:#ffffff12}
+#app .entity-clean-filters label,#app .draft-filters label{font-size:11px;color:#c2cbd4}
+#app .draft-filters input,#app .draft-filters select{min-width:0;width:100%;height:34px;min-height:34px;padding:5px 8px;font-size:12px}
+#app .draft-compact-row:hover,#app .ability-ranking tbody tr:hover{background:#c8ad7010;box-shadow:inset -2px 0 #c8ad70}
+#app .analytics-page>.panel,#app .analytics-page .analytics-grid>.panel{background:#192129;border-color:#ffffff10}
+#app .analytics-page h2{font-size:18px;color:#ead9b8}
+#app .ability-excess>div{grid-template-columns:repeat(5,minmax(0,1fr))}
+#app .quality-widgets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+#app .quality-widgets>div{display:grid;gap:5px;padding:12px 16px;background:#1b252e;border:1px solid #ffffff12;border-radius:10px}
+#app .quality-widgets strong{font-size:26px;color:#edddb8}
+#app .quality-widgets small{color:#b5c2cf}
+#app .gk-editor .panel{padding:12px;margin-bottom:10px}
+#app .gk-editor h2{font-size:17px;margin:0 0 8px}
+#app .gk-editor .gk-metric input{height:36px;min-height:36px;font-size:17px}
+@media(min-width:1100px){
+ #app .draft-filters{display:grid;grid-template-columns:1.2fr repeat(8,minmax(0,1fr));align-items:end}
+ #app .entity-page .team-rating-layout .entity-pitch{max-width:430px;margin-inline:auto}
+}
+@media(max-width:600px){
+ #app .draft-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #app .draft-filters>*{min-width:0}
+ #app .quality-widgets{gap:5px}
+ #app .quality-widgets>div{padding:9px 6px}
+ #app .quality-widgets strong{font-size:22px}
+ #app .quality-widgets small{font-size:10px}
+ #app .ability-excess>div{grid-template-columns:1fr}
+ #app .team-ability-compare{flex-wrap:wrap}
+ #app .team-ability-compare label{max-width:100%}
+ #app .team-panel{min-width:0}
+}
+#app #draft-list .draft-compact-list{max-width:none}
+@media(min-width:651px){
+ #app #draft-list .draft-compact-row{grid-template-columns:minmax(150px,1.5fr) 75px 44px minmax(100px,1fr) minmax(90px,.8fr) 80px 40px;gap:8px}
+ #app #draft-list .draft-compact-row.has-ability{grid-template-columns:minmax(150px,1.5fr) 75px 44px minmax(100px,1fr) minmax(90px,.8fr) 80px 120px 40px}
+ #app #draft-list .draft-edit-row{grid-template-columns:20px minmax(140px,1.5fr) 65px 44px minmax(90px,1fr) minmax(85px,.8fr) 80px minmax(120px,1fr) 35px}
+ #app #draft-list .draft-compact-row>*{grid-column:auto!important;grid-row:auto!important;min-width:0}
+}
+@media(max-width:650px){#app .draft-row-style,#app .draft-row-updated{font-size:10px;color:#b5c2cf}#app .draft-inline-editor label{white-space:normal}#app .draft-inline-editor select{width:72px;min-width:72px}}
+#app .gk-directory{max-width:none;width:100%}
+#app .gk-directory table{width:100%}
+#app .gk-directory .gk-name-cell{min-width:190px}
+#app .gk-directory .gk-rank-cell{width:52px;white-space:nowrap}
+#app .gk-selected-value input,#app .gk-selected-value select{max-width:74px;min-height:34px;height:34px;font-size:17px}
+@media(max-width:650px){#app .gk-directory .gk-name-cell{min-width:0}}
