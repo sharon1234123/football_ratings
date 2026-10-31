@@ -757,3 +757,15 @@ select[dir=ltr]{background-position:right 8px center!important;padding-right:27p
 #app .gk-directory .gk-rank-cell{width:52px;white-space:nowrap}
 #app .gk-selected-value input,#app .gk-selected-value select{max-width:74px;min-height:34px;height:34px;font-size:17px}
 @media(max-width:650px){#app .gk-directory .gk-name-cell{min-width:0}}
+/* Final surface pass: shared frame, restrained entity accents. */
+#app .entity-page .team-rating-layout{gap:8px;padding:8px;border:1px solid color-mix(in srgb,var(--entity-primary) 18%,#303944);border-radius:14px;background:#18212a;align-items:start}
+#app .entity-page .team-rating-layout .team-panel,#app .entity-page .team-rating-layout .entity-lineup{background:transparent;border:0;border-radius:8px;box-shadow:none;margin:0;padding:8px}
+#app .entity-page .team-rating-layout .team-panel{border-inline-end:1px solid color-mix(in srgb,var(--entity-primary) 15%,#303944)}
+#app .entity-page .team-rating-layout .team-overall{border-bottom:1px solid color-mix(in srgb,var(--entity-primary) 28%,#303944)}
+#app .entity-page .team-rating-layout .team-overall>strong{color:color-mix(in srgb,var(--entity-primary) 18%,#ecddba)}
+#app .entity-page .team-rating-layout .player-portrait{border-color:color-mix(in srgb,var(--entity-primary) 40%,#b5bdc6);box-shadow:none}
+#app .entity-page .team-rating-layout .formation-chips button[aria-pressed=true]{color:#ecddba;background:color-mix(in srgb,var(--entity-secondary) 18%,#222d38);border-color:color-mix(in srgb,var(--entity-primary) 35%,#69727b);box-shadow:none}
+@media(min-width:1100px){#app .entity-page .team-rating-layout .entity-pitch{max-width:458px}}
+@media(max-width:700px){#app .entity-page .team-rating-layout{padding:5px;gap:4px}#app .entity-page .team-rating-layout .team-panel{border-inline-end:0;border-bottom:1px solid #ffffff10}}
+#app .entity-page .team-rating-layout .entity-lineup .entity-pitch{margin-inline:auto!important}
+@media(min-width:1100px){#app .entity-page .team-rating-layout{grid-template-columns:minmax(230px,280px) minmax(0,1fr);max-width:1000px;margin-inline:auto}}
