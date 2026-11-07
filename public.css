@@ -3,3 +3,5 @@
 .pitch-player[data-slot]{cursor:default}
 .aside-bottom{color:var(--muted)}
 #gk-drafts,[data-skill-remove],.skill-admin-actions{display:none!important}
+
+.archive-danger-zone,.archived-players,[data-archive-player],[data-restore-player]{display:none!important}

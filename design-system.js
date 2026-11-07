@@ -12,6 +12,7 @@ const UI={
  EntityIcon(kind,name){const src=typeof EntityAssets==='undefined'?null:EntityAssets[kind]?.[name];return `<span class="entity-emblem entity-emblem-${kind}${src?'':' is-placeholder'}" aria-hidden="true">${src?`<img src="${src}" alt="" width="28" height="28" loading="lazy" decoding="async">`:this.Icon(kind==='country'?'countries':'gk')}</span>`},
  RatingBadge(value,{large=false}={}){return `<span class="ui-rating${large?' ui-rating-large':''}">${esc(this.Number(value))}</span>`},
  PositionChip(value){return `<span class="position-chip" dir="ltr">${esc(value||'—')}</span>`},
+ PlayerIdentity(id,name){return `<span class="row-identity">${this.Portrait(id)}<strong>${esc(name)}</strong></span>`},
  PlayerRow(cells,{className=''}={}){return `<tr class="ui-player-row ${className}">${cells.map(c=>`<td>${c}</td>`).join('')}</tr>`},
  PlayerMiniCard(p){return `<button class="ui-mini-player" data-quick="${esc(p.id)}"><span>${esc(p.full_name)}</span>${this.RatingBadge(overall(p))}</button>`},
  SectionHeader(title,sub='',action=''){return `<div class="ui-section-header"><div><h2>${esc(title)}</h2>${sub?`<p>${esc(sub)}</p>`:''}</div>${action}</div>`},

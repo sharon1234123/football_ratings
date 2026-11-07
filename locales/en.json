@@ -677,5 +677,8 @@
   "v34.rollback": "Rollback to V3.3",
   "v34.rollback_confirm": "Restore V3.3 and recalculate field players?",
   "entities.jump": "Go to page",
-  "team_rankings": "Team rankings"
+  "team_rankings": "Team rankings",
+  "analytics.top200_abilities": "Top 200 ability averages",
+  "analytics.top200_average": "Top 200 average",
+  "error.archived": "Player is archived. Restore from database control first."
 }

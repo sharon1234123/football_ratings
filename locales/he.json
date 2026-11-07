@@ -677,5 +677,8 @@
   "v34.rollback": "חזרה ל־V3.3",
   "v34.rollback_confirm": "לחזור ל־V3.3 ולחשב מחדש את שחקני השדה?",
   "entities.jump": "מעבר לעמוד",
-  "team_rankings": "דירוג קבוצות"
+  "team_rankings": "דירוג קבוצות",
+  "analytics.top200_abilities": "ממוצעי 200 המובילים — יכולות",
+  "analytics.top200_average": "ממוצע Top 200",
+  "error.archived": "השחקן נמחק מהמאגר הפעיל. יש לשחזר אותו מבקרת המאגר."
 }

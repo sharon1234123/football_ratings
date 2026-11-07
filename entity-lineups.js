@@ -5,17 +5,18 @@ function persistEntityPanels(){try{localStorage.setItem('entity-panel-preference
 function entityBench(players, starters){
  const pool=players.filter(p=>p.position!=='GK'&&!starters.has(p.id)).sort((a,b)=>compareRatingValues(b.overall,a.overall)||a.id.localeCompare(b.id)),used=new Set();
  const pick=(preferred,fallback=[])=>{const p=[preferred,fallback].flatMap(positions=>pool.filter(p=>!used.has(p.id)&&positions.includes(p.position)))[0];if(p)used.add(p.id);return p};
- const att=[pick(['RW','LW','CF','ST']),pick(['RW','LW','CF','ST'])],mid=[pick(['DM'],['CM','AM']),pick(['CM','AM'],['DM'])],def=[pick(['LB','RB'],['RCB','LCB','CB']),pick(['RCB','LCB','CB'],['LB','RB'])];
- const best=pool.find(p=>!used.has(p.id));if(best)used.add(best.id);
- return [...att,...mid,best,...def].map(p=>{if(p)return p;const next=pool.find(p=>!used.has(p.id));if(next)used.add(next.id);return next}).filter(Boolean);
+ const ATT=['CF','RW','LW','ST'],MID=['DM','CM','AM'],DEF=['RB','LB','RCB','LCB','CB'];
+ const att=[pick(['CF','ST'],ATT),pick(ATT),pick(ATT)],mid=[pick(['DM','CM'],MID),pick(['CM'],['DM'])||pick(['AM']),pick(MID)];
+ const cb=pick(['RCB','LCB','CB'],DEF),fb=pick(['RB','LB'],DEF),def=[pick(DEF),fb,cb];
+ return [...att,...mid,...def].map(p=>{if(p)return p;const next=pool.find(p=>!used.has(p.id));if(next)used.add(next.id);return next}).filter(Boolean);
 }
 function selectedEntityBench(players,result,pref,formation){
  const selected=new Set(Object.values(result.slots).map(s=>s.player_id)),byId=new Map(players.map(p=>[p.id,p]));
  const saved=pref.benches?.[formation];
  const ids=result.bench_persisted?result.bench:(saved?.ids||result.bench||[]);
- const used=new Set(selected),clean=ids.slice(0,7).map(id=>{if(!byId.has(id)||byId.get(id).position==='GK'||used.has(id))return null;used.add(id);return byId.get(id)});
+ const used=new Set(selected),clean=ids.slice(0,9).map(id=>{if(!byId.has(id)||byId.get(id).position==='GK'||used.has(id))return null;used.add(id);return byId.get(id)});
  const candidates=entityBench(players,used);
- while(clean.length<7)clean.push(null);
+ while(clean.length<9)clean.push(null);
  return clean.map(p=>p||candidates.shift()).filter(Boolean);
 }
 function entitySwap(slots,bench,first,second){
@@ -65,12 +66,12 @@ async function entityFormation(kind,name,q){
    if(rating.status!=='calculated'){updateSquadAverages(page,rating);pendingTeam(rating.message);return}
    updateSquadAverages(page,rating);
    const labels={attack:'Attack',shooting:'Shooting',dribbling:'Dribbling',passing:'Passing',athleticism:'Athleticism',general:'General',ball_winning:'Ball Winning',defense:'Defense'};
-   teamHost.innerHTML=`<div class="team-overall" title="${esc(rating.overall)}"><small>TEAM RATING · V1.2</small><strong>${rating.display_overall}</strong><span>סגל נבחר: 18 · ${rating.goalkeeper_placeholder?'שוער זמני 81':'שוער'} + 17 שחקני שדה</span></div><div class="team-squad-average" title="${esc(rating.squadAverageOverall)}">ממוצע הסגל: <b>${rating.display_squad_average}</b></div><div class="team-main-grid">${Object.entries(labels).map(([key,label])=>`<div title="${esc(rating.mains[key])}"><small>${label}</small><b>${rating.display_mains[key]}</b></div>`).join('')}</div><p class="team-rating-note">בסיס קבוצתי + תרומת בונוס מההרכב<br>8 התרומות הגבוהות · עד שני מחליפים לכל יכולת</p>`;
+   teamHost.innerHTML=`<div class="team-overall" title="${esc(rating.overall)}"><small>TEAM RATING · V1.2</small><strong>${rating.display_overall}</strong><span>סגל נבחר: 20 · ${rating.goalkeeper_placeholder?'שוער זמני 81':'שוער'} + 19 שחקני שדה</span></div><div class="team-squad-average" title="${esc(rating.squadAverageOverall)}">ממוצע הסגל: <b>${rating.display_squad_average}</b></div><div class="team-main-grid">${Object.entries(labels).map(([key,label])=>`<div title="${esc(rating.mains[key])}"><small>${label}</small><b class="${UI.MainTier(rating.display_mains[key])}">${rating.display_mains[key]}</b></div>`).join('')}</div><p class="team-rating-note">בסיס קבוצתי + תרומת בונוס מההרכב<br>8 התרומות הגבוהות · עד שני מחליפים לכל יכולת</p>`;
   }catch(e){if(seq===request&&page.isConnected)pendingTeam('חישוב קבוצתי לא זמין כרגע. '+e.message)}
   finally{if(seq===request&&page.isConnected)teamHost.setAttribute('aria-busy','false')}
  };
  const drawLineup=async()=>{
-  if(!d.eligible){pendingTeam('לא מספיק עומק לסגל 18');lineHost.innerHTML='<p class="muted">הרכב ייפתח כאשר יהיו לפחות 12 שחקנים במאגר</p>';return}
+  if(!d.eligible){pendingTeam('לא מספיק עומק לסגל 20');lineHost.innerHTML='<p class="muted">הרכב ייפתח כאשר יהיו לפחות 12 שחקנים במאגר</p>';return}
   const formation=pref.formation,seq=++request;
   lineHost.innerHTML=UI.LoadingState(t('loading'));
   teamHost.setAttribute('aria-busy','true');
@@ -90,7 +91,7 @@ async function entityFormation(kind,name,q){
     result=await api('entity-lineup-save',{kind,key:name,formation,slots:result.slots,bench:bench.map(p=>p.id),lineupMode:'manual',revision:result.revision});cache.set(formation,result);
    }
 
-   lineHost.innerHTML=`<div class="lineup-toolbar"><div><small>מערך</small><strong dir="ltr">${esc(formation)}</strong></div><button class="secondary" data-reset-lineup>איפוס להרכב אוטומטי</button><span class="muted lineup-save-status" role="status">${result.lineupMode==='manual'?'הרכב ידני':'הרכב אוטומטי'}</span></div><div class="formation-options">${[['CLASSIC',['4-3-3','4-4-2','4-2-3-1','4-3-1-2']],['CONTROL',['4-3-3 Holding','5-3-2','5-4-1']]].map(([label,items])=>`<div><small>${label}</small><div class="formation-chips">${items.map(f=>`<button data-formation="${esc(f)}" aria-pressed="${f===formation}" dir="ltr">${esc(f)}</button>`).join('')}</div></div>`).join('')}</div>${Formation.pitch(definitions.map(s=>{const p=d.players.find(r=>r.id===result.slots[s.slot].player_id);return {...s,temporaryGoalkeeper:s.label==='GK'&&!d.players.some(p=>p.position==='GK'),...(triangle&&midSlots.includes(s)?{row:2,triangle:String(midSlots.indexOf(s)+1)}:{}),player:p?{id:p.id,name:p.name,rating:p.display,position:p.position}:null}}),{label:"הרכב "+formation})}<div class="entity-bench" aria-label="מחליפים"><small>מחליפים</small><div>${bench.map(p=>`<button data-bench-player="${p.id}">${UI.Portrait(p.id)}<span>${esc(p.name)}</span><small>${esc(p.position)}</small>${UI.RatingBadge(p.display)}</button>`).join('')}</div></div><div class="lineup-swap-tools"><span data-swap-status role="status">בחרו שני שחקנים להחלפה</span><button class="secondary" data-swap-cancel hidden>ביטול</button><button class="secondary" data-swap-roster hidden>בחירה מהסגל</button></div><div data-lineup-picker></div>`;
+   lineHost.innerHTML=`<div class="lineup-toolbar"><div><small>מערך</small><strong dir="ltr">${esc(formation)}</strong></div><button class="secondary" data-reset-lineup>איפוס להרכב אוטומטי</button><span class="muted lineup-save-status" role="status">${result.lineupMode==='manual'?'הרכב ידני':'הרכב אוטומטי'}</span></div><div class="formation-options">${[['CLASSIC',['4-3-3','4-4-2','4-2-3-1','4-3-1-2']],['CONTROL',['4-3-3 Holding','5-3-2','5-4-1']]].map(([label,items])=>`<div><small>${label}</small><div class="formation-chips">${items.map(f=>`<button data-formation="${esc(f)}" aria-pressed="${f===formation}" dir="ltr">${esc(f)}</button>`).join('')}</div></div>`).join('')}</div>${Formation.pitch(definitions.map(s=>{const p=d.players.find(r=>r.id===result.slots[s.slot].player_id);return {...s,temporaryGoalkeeper:s.label==='GK'&&!d.players.some(p=>p.position==='GK'),...(triangle&&midSlots.includes(s)?{row:2,triangle:String(midSlots.indexOf(s)+1)}:{}),player:p?{id:p.id,name:p.name,rating:p.display,position:p.position}:null}}),{label:"הרכב "+formation})}<div class="entity-bench" aria-label="מחליפים"><small>מחליפים</small><div>${bench.map((p,i)=>`<button data-bench-group="${i<3?'ATT':i<6?'MID':'DEF'}" data-bench-player="${p.id}">${UI.Portrait(p.id)}<span>${esc(p.name)}</span><small>${esc(p.position)}</small>${UI.RatingBadge(p.display)}</button>`).join('')}</div></div><div class="lineup-swap-tools"><span data-swap-status role="status">בחרו שני שחקנים להחלפה</span><button class="secondary" data-swap-cancel hidden>ביטול</button><button class="secondary" data-swap-roster hidden>בחירה מהסגל</button></div><div data-lineup-picker></div>`;
    await updateTeam(formation,result,bench,seq);
    const store=async(values,reset=false,benchIds=null)=>{
     if(busy)return;busy=true;lineHost.querySelectorAll('button').forEach(b=>b.disabled=true);
@@ -105,18 +106,31 @@ async function entityFormation(kind,name,q){
    lineHost.querySelectorAll('[data-formation]').forEach(b=>b.onclick=()=>{if(busy)return;pref.formation=b.dataset.formation;persistEntityPanels();drawLineup()});
    lineHost.querySelector('[data-reset-lineup]').onclick=()=>store(null,true);
    const storeBench=async ids=>store(result.slots,false,ids);
-   const openRoster=b=>{
-    const slot=b.dataset.slot,benchId=b.dataset.benchPlayer,current=slot?result.slots[slot].player_id:benchId,used=new Set(Object.entries(result.slots).filter(([k])=>k!==slot).map(([,v])=>v.player_id));
-    if(benchId)bench.forEach(p=>{if(p.id!==benchId)used.add(p.id)});
-    const picker=lineHost.querySelector('[data-lineup-picker]');
-    picker.innerHTML=`<section class="lineup-picker" aria-label="בחירת שחקן"><div class="section-heading"><h3>בחירת שחקן · ${esc(slot?definitions.find(s=>s.slot===slot).label:'ספסל')}</h3><button data-picker-close>סגירה</button></div><p class="muted">הבחירה משנה את ההרכב בלבד. עמדה ראשית ודירוג נשארים כפי שהם.</p><input type="search" data-picker-search placeholder="חיפוש שחקן" aria-label="חיפוש שחקן להרכב">${slot?'<button data-pick="" class="secondary">השאר עמדה ריקה</button>':''}<div class="lineup-candidates">${d.players.filter(p=>!used.has(p.id)&&(!benchId||p.position!=='GK')).map(p=>`<button data-pick="${p.id}" data-name="${esc(p.name.toLowerCase())}" aria-pressed="${p.id===current}">${UI.Portrait(p.id)}<strong>${esc(p.name)}</strong>${UI.PositionChip(p.position)}${UI.RatingBadge(p.display)}</button>`).join('')}</div></section>`;
-    picker.querySelector('[data-picker-close]').onclick=()=>{picker.innerHTML='';b.focus()};
-    picker.querySelector('[data-picker-search]').oninput=e=>picker.querySelectorAll('[data-name]').forEach(x=>x.hidden=!x.dataset.name.includes(e.target.value.toLowerCase()));
-    picker.querySelectorAll('[data-pick]').forEach(x=>x.onclick=()=>{
-     if(benchId)storeBench(bench.map(p=>p.id===benchId?x.dataset.pick:p.id));
-     else store({...result.slots,[slot]:{player_id:x.dataset.pick||null,manual:true}});
-    });
-    picker.querySelector('input').focus();picker.scrollIntoView({block:'nearest',behavior:'smooth'});
+   const openRoster=button=>{
+    const slot=button.dataset.slot,benchId=button.dataset.benchPlayer,current=slot?result.slots[slot].player_id:benchId;
+    const selected=d.players.find(p=>p.id===current),picker=lineHost.querySelector('[data-lineup-picker]');
+    const slotById=new Map(Object.entries(result.slots).map(([key,value])=>[value.player_id,key]));
+    const benchIds=new Set(bench.map(p=>p.id));
+    picker.innerHTML=`<aside class="swap-drawer" role="dialog" aria-modal="false" aria-label="החלפת שחקן"><header>${UI.Portrait(current)}<div><strong>${esc(selected?.name||'עמדה פנויה')}</strong><small>נבחר להחלפה · ${esc(slot?definitions.find(s=>s.slot===slot).label:'ספסל')}</small></div><button data-picker-close class="secondary">ביטול</button></header><strong class="swap-roster-title">שאר הסגל</strong><div class="swap-roster-filters"><input type="search" data-picker-search placeholder="חיפוש שחקן" aria-label="חיפוש שחקן להרכב"><select data-picker-position aria-label="סינון עמדה"><option value="">כל העמדות</option>${[...new Set(d.players.map(p=>p.position))].map(pos=>`<option value="${pos}">${pos}</option>`).join('')}</select></div><div class="swap-candidates" role="tabpanel"></div></aside>`;
+    const draw=()=>{
+     const search=picker.querySelector('input').value.trim().toLowerCase();
+     const position=picker.querySelector('[data-picker-position]').value,isGK=slot&&definitions.find(s=>s.slot===slot).label==='GK';
+     const candidates=d.players.filter(p=>!slotById.has(p.id)&&!benchIds.has(p.id)&&(p.position==='GK')===Boolean(isGK)&&(!position||p.position===position)&&p.name.toLowerCase().includes(search)).sort((a,b)=>compareRatingValues(b.overall,a.overall)||a.id.localeCompare(b.id));
+     picker.querySelector('.swap-candidates').innerHTML=candidates.map(p=>`<button data-candidate="${p.id}">${UI.PlayerIdentity(p.id,p.name)}${UI.PositionChip(p.position)}${UI.RatingBadge(p.display)}</button>`).join('')||'<p class="swap-empty">לא נמצאו שחקנים</p>';
+     picker.querySelectorAll('[data-candidate]').forEach(x=>x.onclick=()=>{
+      const id=x.dataset.candidate,otherSlot=slotById.get(id);
+      if(otherSlot||benchIds.has(id)){
+       const change=entitySwap(result.slots,bench.map(p=>p.id),slot?{slot}:{id:benchId},otherSlot?{slot:otherSlot}:{id});
+       if(change)store(change.slots,false,change.bench);
+      }else if(benchId)storeBench(bench.map(p=>p.id===benchId?id:p.id));
+      else store({...result.slots,[slot]:{player_id:id,manual:true}});
+     });
+    };
+    picker.querySelector('[data-picker-close]').onclick=()=>{mark(null,null);button.focus()};
+    picker.onkeydown=e=>{if(e.key==='Escape'){e.preventDefault();mark(null,null);button.focus()}};
+    picker.querySelector('input').oninput=draw;
+    picker.querySelector('[data-picker-position]').onchange=draw;
+    draw();picker.querySelector('[data-picker-close]').focus();
    };
    let swapSelection=null;
    const cancel=lineHost.querySelector('[data-swap-cancel]'),roster=lineHost.querySelector('[data-swap-roster]'),status=lineHost.querySelector('[data-swap-status]');
@@ -131,6 +145,8 @@ async function entityFormation(kind,name,q){
     if(busy)return;
     if(!swapSelection){mark(choice,button);return}
     if(swapSelection.button===button){mark(null,null);return}
+    const firstGK=swapSelection.choice.slot&&definitions.find(s=>s.slot===swapSelection.choice.slot).label==='GK',secondGK=choice.slot&&definitions.find(s=>s.slot===choice.slot).label==='GK';
+    if(Boolean(firstGK)!==Boolean(secondGK)){toast('שוער נשאר בעמדת GK; ניתן לבחור שוער אחר משאר הסגל');return}
     const change=entitySwap(result.slots,bench.map(p=>p.id),swapSelection.choice,choice);
     if(change){
      if(!swapSelection.choice.slot&&!choice.slot)storeBench(change.bench);
@@ -154,14 +170,14 @@ async function entityFormation(kind,name,q){
  };
  page.querySelector('[data-entity-tab="overview"]').setAttribute('aria-controls','entity-lineup entity-squad');
  page.querySelectorAll('[data-entity-tab]').forEach(b=>b.onclick=()=>show(b.dataset.entityTab));
- if(!d.eligible)pendingTeam('לא מספיק עומק לסגל 18');
+ if(!d.eligible)pendingTeam('לא מספיק עומק לסגל 20');
  show('overview');
 }
 
 function updateSquadAverages(page,rating){
  const host=page.querySelector('[data-squad-main-averages]');
- if(host)host.innerHTML=rating.status==='calculated'?mains.map(k=>`<div><small>${t('main.'+k)}</small><b> ${entityNumber(rating.squadMainAverages[k])}</b></div>`).join(''):'לא מספיק עומק לסגל 18';
+ if(host)host.innerHTML=rating.status==='calculated'?mains.map(k=>`<div><small>${t('main.'+k)}</small><b> ${entityNumber(rating.squadMainAverages[k])}</b></div>`).join(''):'לא מספיק עומק לסגל 20';
  const comparison=page.querySelector('[data-squad-ability-average]');
- if(comparison){const value=rating.squadAbilityAverages?.[page.dataset.metric];comparison.innerHTML=`ממוצע יכולת בסגל הנבחר <strong>${entityNumber(value)}</strong><small> · 17 שחקני שדה</small>`;}
+ if(comparison){const value=rating.squadAbilityAverages?.[page.dataset.metric];comparison.innerHTML=`ממוצע יכולת בסגל הנבחר <strong>${entityNumber(value)}</strong><small> · 19 שחקני שדה</small>`;}
  page.squadRating=rating;
 }
